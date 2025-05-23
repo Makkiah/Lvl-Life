@@ -1,11 +1,4 @@
-import './workouts.css';
-
-
-let regimen = [
-  {name: "Cardio & Core"},
-  {name: "Arms & Back"},
-  {name: "Legs & Shoulders"}
-]
+import Fitness from '../../ui/Fitness/fitness.jsx';
 
 export default function workouts() {
   return (
@@ -15,13 +8,7 @@ export default function workouts() {
           <h2 className="page-title">Workouts</h2>
         </div>
         <div className="page-content">
-          <div className="wo">
-            {regimen.map((workout, index) => (
-                <div className="wo-option" key={workout.index}>
-                    <p className="wo-title" key={workout.index}>{workout.name}</p> &rarr;
-              </div>
-            ))}
-          </div>
+          <Fitness/>
         </div>
       </main>
     </div>

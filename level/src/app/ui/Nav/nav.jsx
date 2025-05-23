@@ -18,7 +18,7 @@ const nav = () => {
         </div>
         <div className='nav-bottom'>
             {Navi.map((nav, index) => (
-                <Link className='nav-link' href={nav.link} key={nav.index}>{nav.name}</Link>
+                <Link className='nav-link' href={nav.link} key={index}>{nav.name}</Link>
             ))}
             
         </div>
