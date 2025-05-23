@@ -7,16 +7,16 @@ const fitness = () => {
     const [selectedWorkout, setSelectedWorkout] = useState(0);
 
     let [regimen, setRegimen] = useState([
-        {id: 1, name: "Cardio & Core", details: [
+        {id: 1, name: "Cardio & Core", crap: false, details: [
             {discription: '5-minute stretch & warm up', note: 'You got this!', completion: true},
             {discription: 'Jog on the treadmill til you burn 100 calories', note: '', completion: false},
             {discription: '10 Burpees', note: '', completion: false},
             {discription: 'Stair Master for 10 Minutes', note: 'Only did 6 minutes instead', completion: false},
         ]},
-        {id: 2, name: "Arms & Back", details: [
+        {id: 2, name: "Arms & Back", crap: false, details: [
             {discription: 'Jog on the treadmill til you burn 100 calories', note: '', completion: false},
         ]},
-        {id: 3, name: "Legs & Shoulders", details: [
+        {id: 3, name: "Legs & Shoulders", crap: false, details: [
             {discription: 'Stair Master for 10 Minutes', note: '', completion: false},
         ]}
     ])
@@ -26,13 +26,14 @@ const fitness = () => {
     }
 
     const markCompleted = (itemId, detailIndex) => {
-        setRegimen((prevRegimen) =>
-          prevRegimen.map((item) =>
+
+        setRegimen((currState) =>
+          currState.map((item) =>
             item.id === itemId
               ? {
                   ...item,
                   details: item.details.map((detail, i) =>
-                    i === detailIndex ? { ...detail, completed: true } : detail
+                    i === detailIndex ? { ...detail, completed: !detail.completed} : detail,
                   ),
                 }
               : item
@@ -47,16 +48,15 @@ const fitness = () => {
                     <button onClick={() => handleSelect(workout.id)} className="wo-option">
                         <p className="wo-title">{workout.name}</p> &rarr;
                     </button>
-
+                    {workout.crap === true ? "Craaaapppp!" : ""}
                     {selectedWorkout === workout.id && (
                         <div className="wo-container">
                             {workout.details.map((work, index) => (
                                 <div className='wo-details' key={index}>
                                     <button
                                         onClick={() => markCompleted(workout.id, index)}
-                                        disabled={workout.completed}
                                         className={`wo-completion ${
-                                        work.completed ? 'wo-completed' : ''
+                                            work.completed ? 'wo-completed' : ''
                                         }`}
                                     ></button>
 
