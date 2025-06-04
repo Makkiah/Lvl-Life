@@ -173,7 +173,6 @@ const fitness = () => {
                                                 work.completion ? 'wo-completed' : ''
                                             }`}
                                         ></button>
-
                                         <div className="wo-details-div">
                                             <p className="wo-discription">{work.discription}</p>
                                             {work.note ? <p className="wo-note">{work.note}</p> : null}
