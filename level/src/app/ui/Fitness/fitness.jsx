@@ -9,7 +9,7 @@ const LOCAL_STORAGE_KEY = 'userRegimen';
 const fitness = () => {
     const [regimen, setRegimen] = useState([]);
     const [newWorkoutName, setNewWorkoutName] = useState('');
-    const [newExercise, setNewExercise] = useState({ discription: '', note: '', completion: false, timeCompleted: null  });
+    const [newExercise, setNewExercise] = useState({ description: '', note: '', completion: false, timeCompleted: null  });
     const [selectedWorkout, setSelectedWorkout] = useState(null);
     
 
@@ -41,7 +41,7 @@ const fitness = () => {
     };
 
     const handleAddExercise = () => {
-        if (!newExercise.discription.trim()) return;
+        if (!newExercise.description.trim()) return;
 
         setRegimen((prev) =>
             prev.map((item) =>
@@ -60,7 +60,7 @@ const fitness = () => {
             )
         );
 
-        setNewExercise({ discription: '', note: '', completion: false, timeCompleted: null });
+        setNewExercise({ description: '', note: '', completion: false, timeCompleted: null });
     };
 
 
@@ -124,13 +124,13 @@ const fitness = () => {
                     className="wo-form-input"
                     type="text"
                     placeholder="Exercise title"
-                    value={newExercise.discription}
-                    onChange={(e) => setNewExercise({ ...newExercise, discription: e.target.value })}
+                    value={newExercise.description}
+                    onChange={(e) => setNewExercise({ ...newExercise, description: e.target.value })}
                     />
                     <input
                     className="wo-form-input"
                     type="text"
-                    placeholder="Exercise discription (optional)"
+                    placeholder="Exercise description (optional)"
                     value={newExercise.note}
                     onChange={(e) => setNewExercise({ ...newExercise, note: e.target.value })}
                     />
@@ -174,7 +174,7 @@ const fitness = () => {
                                             }`}
                                         ></button>
                                         <div className="wo-details-div">
-                                            <p className="wo-discription">{work.discription}</p>
+                                            <p className="wo-description">{work.description}</p>
                                             {work.note ? <p className="wo-note">{work.note}</p> : null}
                                             {work.completion ? <p className="wo-completion-note"><strong>Completed:</strong> {new Date(work.timeCompleted).toLocaleDateString()} - {new Date(work.timeCompleted).toLocaleTimeString()}</p> : null}
                                         </div>
