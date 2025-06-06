@@ -2,6 +2,7 @@
 import {motion, AnimatePresence} from 'motion/react';
 import {React, useState, useEffect} from 'react';
 import './fitness.scss';
+// import myList from '../../data';
 
 const LOCAL_STORAGE_KEY = 'userRegimen';
 
@@ -12,7 +13,13 @@ const fitness = () => {
     const [newExercise, setNewExercise] = useState({ description: '', note: '', completion: false, timeCompleted: null  });
     const [selectedWorkout, setSelectedWorkout] = useState(null);
     
-
+    // // Load from data.js
+    // useEffect(() => {
+    //     const saved = myList;
+    //     if (saved) {
+    //         setRegimen(saved);
+    //     }
+    // }, []);
 
     // Load from localStorage
     useEffect(() => {
