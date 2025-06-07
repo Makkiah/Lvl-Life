@@ -3,7 +3,7 @@ import Link from 'next/link';
 
 
 let Navi = [
-    {name: 'Home Page', link: '/'},
+    {name: 'Home', link: '/'},
     {name: 'Dashboard', link: '/dashboard'},
     {name: 'Workouts', link: '/dashboard/workouts'},
     {name: 'Habits', link: '/dashboard/habits'},
