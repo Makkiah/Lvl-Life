@@ -1,3 +1,5 @@
+:root{--color: aqua};
+
 .nav{ 
     &-wrapper{
         width: fit-content;
@@ -16,7 +18,7 @@
         width: 100px;
         height: 100px;
         border-radius: 50%;
-        background-color: aqua;
+        background-color: var(--color);
     }
     &-bottom{
         display: flex;

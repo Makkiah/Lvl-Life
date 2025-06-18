@@ -2,7 +2,7 @@
 import {motion, AnimatePresence} from 'motion/react';
 import {React, useState, useEffect} from 'react';
 import './fitness.scss';
-import myList from '../../data';
+//import myList from '../../data';
 
 const LOCAL_STORAGE_KEY = 'userRegimen';
 
@@ -10,24 +10,26 @@ const LOCAL_STORAGE_KEY = 'userRegimen';
 const fitness = () => {
     const [regimen, setRegimen] = useState([]);
     const [newWorkoutName, setNewWorkoutName] = useState('');
-    const [newExercise, setNewExercise] = useState({ description: '', note: '', completion: false, timeCompleted: null  });
+    const [newExercise, setNewExercise] = useState({ id: null, description: '', note: '', completion: false, timeCompleted: null  });
     const [selectedWorkout, setSelectedWorkout] = useState(null);
+    const [editWorkoutId, setEditWorkoutId] = useState(null);
+    const [editWorkoutName, setEditWorkoutName] = useState('');
     
     // Load from data.js
-    useEffect(() => {
-        const saved = myList;
-        if (saved) {
-            setRegimen(saved);
-        }
-    }, []);
-
-    // Load from localStorage
     // useEffect(() => {
-    //     const saved = localStorage.getItem(LOCAL_STORAGE_KEY);
+    //     const saved = myList;
     //     if (saved) {
-    //     setRegimen(JSON.parse(saved));
+    //         setRegimen(saved);
     //     }
     // }, []);
+
+    // Load from localStorage
+    useEffect(() => {
+         const saved = localStorage.getItem(LOCAL_STORAGE_KEY);
+         if (saved) {
+         setRegimen(JSON.parse(saved));
+         }
+    }, []);
 
     // Save to localStorage when regimen changes
     useEffect(() => {
@@ -56,25 +58,21 @@ const fitness = () => {
                 ? {
                     ...item,
                     details: [
-                    ...item.details,
-                    {
-                        ...newExercise,
-                        completion: false,
-                    },
+                        ...item.details,
+                        {
+                            ...newExercise,
+                            completion: false,
+                            id: Date.now(),
+                        },
                     ],
                 }
                 : item
             )
         );
 
-        setNewExercise({ description: '', note: '', completion: false, timeCompleted: null });
+        setNewExercise({ id: null, description: '', note: '', completion: false, timeCompleted: null });
     };
 
-
-  
-
-    
-      
     const handleSelect = (id) => {
         setSelectedWorkout(id === selectedWorkout ? null : id)
     }
@@ -104,12 +102,40 @@ const fitness = () => {
         
     };
 
-    const itemsToShow = selectedWorkout
-        ? regimen.filter((item) => item.id === selectedWorkout)
-        : regimen;
+    const itemsToShow = selectedWorkout ? regimen.filter((item) => item.id === selectedWorkout) : regimen;
     
     const handleBack = () => {
         setSelectedWorkout(null);
+    };
+
+    const handleDeleteWorkout = (workoutId) => {
+        setRegimen(prev => prev.filter(workout => workout.id !== workoutId))
+    };
+
+    const handleDeleteExercise = (workoutId, exerciseId) => {
+        setRegimen(prev => prev.map(workout => 
+            workout.id === workoutId ? {
+                ...workout,
+                details: workout.details.filter(exercise => exercise.id !== exerciseId)
+            } : workout
+        ))
+    };
+
+    const handleEdit = (workoutId, currentName) => {
+        setEditWorkoutId(workoutId)
+        setEditWorkoutName(currentName)
+    };
+
+    const handleSave = () => {
+        setRegimen(prev => prev.map(workout => 
+            workout.id === editWorkoutId ? {
+                ...workout,
+                name: editWorkoutName,  // return a new object with updated name
+            } : workout
+        ));
+
+        setEditWorkoutId(null); // exit edit mode
+        setEditWorkoutName('');
     };
 
     return (
@@ -162,6 +188,8 @@ const fitness = () => {
                     <button onClick={() => handleSelect(workout.id)} className="wo-option">
                         <p className="wo-title">{workout.name} {workout.details.some(detail => detail.completion) && <span className="checkmark">✓</span>} </p> &rarr;
                     </button>
+                    <button onClick={() => handleDeleteWorkout(workout.id)} className='wo-delete'>Delete</button>
+
                     <AnimatePresence>
                         {selectedWorkout === workout.id && (
                             <motion.div
@@ -172,19 +200,33 @@ const fitness = () => {
                                 transition={{ duration: 0.3 }}
                                 className="wo-container"
                             >
-                                {workout.details.map((work, index) => (
+                                {workout.details.map((excersise, index) => (
+                                    
                                     <div className='wo-details' key={index}>
-                                        <button
-                                            onClick={() => markCompleted(workout.id, index)}
-                                            className={`wo-completion ${
-                                                work.completion ? 'wo-completed' : ''
-                                            }`}
-                                        ></button>
-                                        <div className="wo-details-div">
-                                            <p className="wo-description">{work.description}</p>
-                                            {work.note ? <p className="wo-note">{work.note}</p> : null}
-                                            {work.completion ? <p className="wo-completion-note"><strong>Completed:</strong> {new Date(work.timeCompleted).toLocaleDateString()} - {new Date(work.timeCompleted).toLocaleTimeString()}</p> : null}
-                                        </div>
+                                        {editWorkoutId === workout.id ? (
+                                            <>
+                                                <input 
+                                                    value={editWorkoutName}
+                                                    onChange={(e) => setEditWorkoutName(e.target.value)}
+                                                />
+                                                <button onClick={handleSave}>Save</button>
+                                            </> ) : (
+                                            <>
+                                                <button
+                                                    onClick={() => markCompleted(workout.id, index)}
+                                                    className={`wo-completion ${
+                                                        excersise.completion ? 'wo-completed' : ''
+                                                    }`}
+                                                ></button>
+                                                <div className="wo-details-div">
+                                                    <p className="wo-description">{excersise.description}</p>
+                                                    {excersise.note ? <p className="wo-note">{excersise.note}</p> : null}
+                                                    {excersise.completion ? <p className="wo-completion-note"><strong>Completed:</strong> {new Date(excersise.timeCompleted).toLocaleDateString()} - {new Date(excersise.timeCompleted).toLocaleTimeString()}</p> : null}
+                                                </div>
+                                                <button onClick={() => handleDeleteExercise(workout.id, excersise.id)} className='wo-delete'>Delete</button>
+                                                <button onClick={() => handleEdit(workout.id, workout.name)}>Edit</button>
+                                            </> )
+                                        }
                                     </div>
                                 ))}
                             </motion.div>
