@@ -185,11 +185,25 @@ const fitness = () => {
                     exit={{ opacity: 0, y: -20 }}
                     className="wo-div"
                 >
-                    <button onClick={() => handleSelect(workout.id)} className="wo-option">
-                        <p className="wo-title">{workout.name} {workout.details.some(detail => detail.completion) && <span className="checkmark">✓</span>} </p> &rarr;
-                    </button>
-                    <button onClick={() => handleDeleteWorkout(workout.id)} className='wo-delete'>Delete</button>
-
+                    {editWorkoutId === workout.id ? (
+                        <>  
+                            <div className="wo-editing">
+                                <input 
+                                    className='wo-editing-input'
+                                    value={editWorkoutName}
+                                    onChange={(e) => setEditWorkoutName(e.target.value)}
+                                />
+                            </div>
+                            <button onClick={handleSave} className='wo-saveBtn'>Save</button>
+                        </> ) : (
+                        <>
+                            <button onClick={() => handleSelect(workout.id)} className="wo-option">
+                                <p className="wo-title">{workout.name} {workout.details.some(detail => detail.completion) && <span className="checkmark">✓</span>} </p> &rarr;
+                            </button>
+                            <button onClick={() => handleDeleteWorkout(workout.id)} className='wo-deleteBtn'>Delete</button>
+                            <button onClick={() => handleEdit(workout.id, workout.name)} className='wo-editBtn'>Edit</button>
+                        </> )
+                    }
                     <AnimatePresence>
                         {selectedWorkout === workout.id && (
                             <motion.div
@@ -203,30 +217,18 @@ const fitness = () => {
                                 {workout.details.map((excersise, index) => (
                                     
                                     <div className='wo-details' key={index}>
-                                        {editWorkoutId === workout.id ? (
-                                            <>
-                                                <input 
-                                                    value={editWorkoutName}
-                                                    onChange={(e) => setEditWorkoutName(e.target.value)}
-                                                />
-                                                <button onClick={handleSave}>Save</button>
-                                            </> ) : (
-                                            <>
-                                                <button
-                                                    onClick={() => markCompleted(workout.id, index)}
-                                                    className={`wo-completion ${
-                                                        excersise.completion ? 'wo-completed' : ''
-                                                    }`}
-                                                ></button>
-                                                <div className="wo-details-div">
-                                                    <p className="wo-description">{excersise.description}</p>
-                                                    {excersise.note ? <p className="wo-note">{excersise.note}</p> : null}
-                                                    {excersise.completion ? <p className="wo-completion-note"><strong>Completed:</strong> {new Date(excersise.timeCompleted).toLocaleDateString()} - {new Date(excersise.timeCompleted).toLocaleTimeString()}</p> : null}
-                                                </div>
-                                                <button onClick={() => handleDeleteExercise(workout.id, excersise.id)} className='wo-delete'>Delete</button>
-                                                <button onClick={() => handleEdit(workout.id, workout.name)}>Edit</button>
-                                            </> )
-                                        }
+                                        <button
+                                            onClick={() => markCompleted(workout.id, index)}
+                                            className={`wo-completion ${
+                                                excersise.completion ? 'wo-completed' : ''
+                                            }`}
+                                        ></button>
+                                        <div className="wo-details-div">
+                                            <p className="wo-description">{excersise.description}</p>
+                                            {excersise.note ? <p className="wo-note">{excersise.note}</p> : null}
+                                            {excersise.completion ? <p className="wo-completion-note"><strong>Completed:</strong> {new Date(excersise.timeCompleted).toLocaleDateString()} - {new Date(excersise.timeCompleted).toLocaleTimeString()}</p> : null}
+                                        </div>
+                                        <button onClick={() => handleDeleteExercise(workout.id, excersise.id)} className='wo-delete'>Delete</button>       
                                     </div>
                                 ))}
                             </motion.div>
