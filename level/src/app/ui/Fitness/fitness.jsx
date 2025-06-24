@@ -5,6 +5,7 @@ import './fitness.scss';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import SaveIcon from '@mui/icons-material/Save';
+import Tooltip from '@mui/material/Tooltip';
 //import myList from '../../data';
 
 const LOCAL_STORAGE_KEY = 'userRegimen';
@@ -240,14 +241,20 @@ const fitness = () => {
                                     onChange={(e) => setEditWorkoutName(e.target.value)}
                                 />
                             </div>
-                            <SaveIcon onClick={handleWorkoutSave} className='wo-saveBtn'></SaveIcon>
+                            <Tooltip title="Save" placement='right'>
+                                <SaveIcon onClick={handleWorkoutSave} className='wo-saveBtn'></SaveIcon>
+                            </Tooltip>
                         </> ) : (
                         <>
                             <button onClick={() => handleSelect(workout.id)} className="wo-option">
                                 <p className="wo-title">{workout.name} {workout.details.some(detail => detail.completion) && <span className="checkmark">✓</span>} </p> &rarr;
                             </button>
-                            <EditIcon onClick={() => handleWorkoutEdit(workout.id, workout.name)} className='wo-editBtn'></EditIcon>
-                            <DeleteIcon onClick={() => handleDeleteWorkout(workout.id)} className='wo-deleteBtn'></DeleteIcon>
+                            <Tooltip title="Edit">
+                                <EditIcon onClick={() => handleWorkoutEdit(workout.id, workout.name)} className='wo-editBtn'></EditIcon>
+                            </Tooltip>
+                            <Tooltip title="Delete">
+                                <DeleteIcon onClick={() => handleDeleteWorkout(workout.id)} className='wo-deleteBtn'></DeleteIcon>
+                            </Tooltip>
                         </> )
                     }
                     <AnimatePresence>
@@ -279,7 +286,9 @@ const fitness = () => {
                                                         onChange={(e) => setEditExercise((prev) => ({...prev, note: e.target.value}))}
                                                     />
                                                 </div>
-                                                <SaveIcon onClick={handleExerciseSave} className='wo-saveBtn'></SaveIcon> 
+                                                <Tooltip title="Save"  placement='right'>
+                                                    <SaveIcon onClick={handleExerciseSave} className='wo-saveBtn'></SaveIcon> 
+                                                </Tooltip>
                                             </> ) : ( <>
                                                <button
                                                     onClick={() => markCompleted(workout.id, index)}
@@ -292,8 +301,12 @@ const fitness = () => {
                                                     {exercise.note ? <p className="wo-note">{exercise.note}</p> : null}
                                                     {exercise.completion ? <p className="wo-completion-note"><strong>Completed:</strong> {new Date(exercise.timeCompleted).toLocaleDateString()} - {new Date(exercise.timeCompleted).toLocaleTimeString()}</p> : null}
                                                 </div>
-                                                <EditIcon onClick={() => handleEditExercise(workout.id, exercise.id, exercise.description, exercise.note)} className='wo-editBtn'></EditIcon>       
-                                                <DeleteIcon onClick={() => handleDeleteExercise(workout.id, exercise.id)} className='wo-deleteBtn'></DeleteIcon>
+                                                <Tooltip title="Edit">
+                                                    <EditIcon onClick={() => handleEditExercise(workout.id, exercise.id, exercise.description, exercise.note)} className='wo-editBtn'></EditIcon>
+                                                </Tooltip>
+                                                <Tooltip title="Delete">
+                                                    <DeleteIcon onClick={() => handleDeleteExercise(workout.id, exercise.id)} className='wo-deleteBtn'></DeleteIcon>
+                                                </Tooltip>
                                             </> 
                                         )}
                                     </div>
