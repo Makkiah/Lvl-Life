@@ -14,6 +14,12 @@ const fitness = () => {
     const [selectedWorkout, setSelectedWorkout] = useState(null);
     const [editWorkoutId, setEditWorkoutId] = useState(null);
     const [editWorkoutName, setEditWorkoutName] = useState('');
+    const [editExercise, setEditExercise] = useState({
+        workoutId: null,
+        exerciseId: null,
+        desc: '',
+        note: ''
+    });
     
     // Load from data.js
     // useEffect(() => {
@@ -23,7 +29,7 @@ const fitness = () => {
     //     }
     // }, []);
 
-    // Load from localStorage
+    // Load from localStorage when component mounts 
     useEffect(() => {
          const saved = localStorage.getItem(LOCAL_STORAGE_KEY);
          if (saved) {
@@ -121,12 +127,12 @@ const fitness = () => {
         ))
     };
 
-    const handleEdit = (workoutId, currentName) => {
+    const handleWorkoutEdit = (workoutId, currentName) => {
         setEditWorkoutId(workoutId)
         setEditWorkoutName(currentName)
     };
 
-    const handleSave = () => {
+    const handleWorkoutSave = () => {
         setRegimen(prev => prev.map(workout => 
             workout.id === editWorkoutId ? {
                 ...workout,
@@ -137,6 +143,43 @@ const fitness = () => {
         setEditWorkoutId(null); // exit edit mode
         setEditWorkoutName('');
     };
+
+    const handleExerciseSave = (workoutId, exerciseId, newDesc, newNote) => {
+        setRegimen(prev => prev.map(workout => {
+            if(workout.id === editExercise.workoutId){
+                return {
+                    ...workout,
+                    details: workout.details.map(exercise => {
+                        if(exercise.id === editExercise.exerciseId){
+                            return {
+                                ...exercise,
+                                description: editExercise.desc,
+                                note: editExercise.note,
+                            };
+                        }
+                        return exercise;
+                    })
+                };
+            }
+            return workout;
+        }))
+        //Clears edit state
+        setEditExercise({
+            workoutId: null,
+            exerciseId: null,
+            desc: '',
+            note: ''
+        });
+    };
+
+    const handleEditExercise = (workoutId, exerciseId, newDesc, newNote) => {
+        setEditExercise({
+            workoutId,
+            exerciseId,
+            desc: newDesc,
+            note: newNote
+        })
+    }
 
     return (
         <div className="wo">
@@ -194,14 +237,14 @@ const fitness = () => {
                                     onChange={(e) => setEditWorkoutName(e.target.value)}
                                 />
                             </div>
-                            <button onClick={handleSave} className='wo-saveBtn'>Save</button>
+                            <button onClick={handleWorkoutSave} className='wo-saveBtn'>Save</button>
                         </> ) : (
                         <>
                             <button onClick={() => handleSelect(workout.id)} className="wo-option">
                                 <p className="wo-title">{workout.name} {workout.details.some(detail => detail.completion) && <span className="checkmark">✓</span>} </p> &rarr;
                             </button>
                             <button onClick={() => handleDeleteWorkout(workout.id)} className='wo-deleteBtn'>Delete</button>
-                            <button onClick={() => handleEdit(workout.id, workout.name)} className='wo-editBtn'>Edit</button>
+                            <button onClick={() => handleWorkoutEdit(workout.id, workout.name)} className='wo-editBtn'>Edit</button>
                         </> )
                     }
                     <AnimatePresence>
@@ -214,21 +257,42 @@ const fitness = () => {
                                 transition={{ duration: 0.3 }}
                                 className="wo-container"
                             >
-                                {workout.details.map((excersise, index) => (
+                                {workout.details.map((exercise, index) => (
                                     
                                     <div className='wo-details' key={index}>
-                                        <button
-                                            onClick={() => markCompleted(workout.id, index)}
-                                            className={`wo-completion ${
-                                                excersise.completion ? 'wo-completed' : ''
-                                            }`}
-                                        ></button>
-                                        <div className="wo-details-div">
-                                            <p className="wo-description">{excersise.description}</p>
-                                            {excersise.note ? <p className="wo-note">{excersise.note}</p> : null}
-                                            {excersise.completion ? <p className="wo-completion-note"><strong>Completed:</strong> {new Date(excersise.timeCompleted).toLocaleDateString()} - {new Date(excersise.timeCompleted).toLocaleTimeString()}</p> : null}
-                                        </div>
-                                        <button onClick={() => handleDeleteExercise(workout.id, excersise.id)} className='wo-delete'>Delete</button>       
+                                        {editExercise.workoutId === workout.id && editExercise.exerciseId === exercise.id ? ( 
+                                            <>
+                                                <div className="wo-editing-ex">
+                                                    <input 
+                                                        className='wo-editing-input-desc'
+                                                        type="text"
+                                                        value={editExercise.desc}
+                                                        onChange={(e) => setEditExercise((prev) => ({...prev, desc: e.target.value}))}
+                                                    />
+                                                    <input 
+                                                        className='wo-editing-input-note'
+                                                        type="text"
+                                                        value={editExercise.note}
+                                                        onChange={(e) => setEditExercise((prev) => ({...prev, note: e.target.value}))}
+                                                    />
+                                                </div>
+                                                <button onClick={handleExerciseSave} className='wo-saveBtn'>Save</button> 
+                                            </> ) : ( <>
+                                               <button
+                                                    onClick={() => markCompleted(workout.id, index)}
+                                                    className={`wo-completion ${
+                                                        exercise.completion ? 'wo-completed' : ''
+                                                    }`}
+                                                ></button>
+                                                <div className="wo-details-div">
+                                                    <p className="wo-description">{exercise.description}</p>
+                                                    {exercise.note ? <p className="wo-note">{exercise.note}</p> : null}
+                                                    {exercise.completion ? <p className="wo-completion-note"><strong>Completed:</strong> {new Date(exercise.timeCompleted).toLocaleDateString()} - {new Date(exercise.timeCompleted).toLocaleTimeString()}</p> : null}
+                                                </div>
+                                                <button onClick={() => handleEditExercise(workout.id, exercise.id, exercise.description, exercise.note)} className='wo-editBtn'>Edit</button>       
+                                                <button onClick={() => handleDeleteExercise(workout.id, exercise.id)} className='wo-deleteBtn'>Delete</button>
+                                            </> 
+                                        )}
                                     </div>
                                 ))}
                             </motion.div>

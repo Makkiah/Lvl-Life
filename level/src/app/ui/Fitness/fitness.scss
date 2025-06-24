@@ -101,6 +101,27 @@
         &-input{
             font-size: 20px;
             font-weight: bold;
+            border-radius: 8px;
+            border: 1px solid #e6e6e6;
+
+            &-desc{
+                font-size: 16px;
+                font-weight: normal;
+                border-radius: 8px;
+                border: 1px solid #e6e6e6;
+            }
+            &-note{
+                font-size: 14px;
+                font-weight: normal;
+                border-radius: 8px;
+                border: 1px solid #e6e6e6;
+            }
+        }
+
+        &-ex{
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
         }
     }
     &-title{
@@ -153,7 +174,9 @@
     &-completed{
         background-color: green;;
     }
-    &-description{}
+    &-description{
+        font-size: 16px;
+    }
     &-note{
         font-size: 14px;
         font-style: italic;
