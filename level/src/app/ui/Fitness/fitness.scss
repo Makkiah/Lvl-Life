@@ -73,19 +73,49 @@
     }
     &-deleteBtn{
         padding: 4px;
-        font-size: 16px;
+        font-size: 32px !important;
         margin-right: 8px;
         margin-top: 4px;
+        border-radius: 8px;
+        transition: all .2s ease-in;
+        color: #000;
+
+        &:hover{
+            cursor: pointer;
+            background-color: #5e5e5e;
+            color: #fff;
+            transition: all .2s ease-out;
+        }
     }
     &-editBtn{
         padding: 4px;
-        font-size: 16px;
+        font-size: 32px !important;
         margin-top: 4px;
+        border-radius: 8px;
+        transition: all .2s ease-in;
+        color: #000;
+
+        &:hover{
+            cursor: pointer;
+            background-color: #5e5e5e;
+            color: #fff;
+            transition: all .2s ease-out;
+        }
     }
     &-saveBtn{
         padding: 4px;
-        font-size: 16px;
+        font-size: 32px !important;
         margin-top: 4px;
+        border-radius: 8px;
+        transition: all .2s ease-in;
+        color: #000;
+
+        &:hover{
+            cursor: pointer;
+            background-color: #5e5e5e;
+            color: #fff;
+            transition: all .2s ease-out;
+        }
     }
     &-editing{
         width: 400px;

@@ -2,6 +2,9 @@
 import {motion, AnimatePresence} from 'motion/react';
 import {React, useState, useEffect} from 'react';
 import './fitness.scss';
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/Delete';
+import SaveIcon from '@mui/icons-material/Save';
 //import myList from '../../data';
 
 const LOCAL_STORAGE_KEY = 'userRegimen';
@@ -237,14 +240,14 @@ const fitness = () => {
                                     onChange={(e) => setEditWorkoutName(e.target.value)}
                                 />
                             </div>
-                            <button onClick={handleWorkoutSave} className='wo-saveBtn'>Save</button>
+                            <SaveIcon onClick={handleWorkoutSave} className='wo-saveBtn'></SaveIcon>
                         </> ) : (
                         <>
                             <button onClick={() => handleSelect(workout.id)} className="wo-option">
                                 <p className="wo-title">{workout.name} {workout.details.some(detail => detail.completion) && <span className="checkmark">✓</span>} </p> &rarr;
                             </button>
-                            <button onClick={() => handleDeleteWorkout(workout.id)} className='wo-deleteBtn'>Delete</button>
-                            <button onClick={() => handleWorkoutEdit(workout.id, workout.name)} className='wo-editBtn'>Edit</button>
+                            <EditIcon onClick={() => handleWorkoutEdit(workout.id, workout.name)} className='wo-editBtn'></EditIcon>
+                            <DeleteIcon onClick={() => handleDeleteWorkout(workout.id)} className='wo-deleteBtn'></DeleteIcon>
                         </> )
                     }
                     <AnimatePresence>
@@ -276,7 +279,7 @@ const fitness = () => {
                                                         onChange={(e) => setEditExercise((prev) => ({...prev, note: e.target.value}))}
                                                     />
                                                 </div>
-                                                <button onClick={handleExerciseSave} className='wo-saveBtn'>Save</button> 
+                                                <SaveIcon onClick={handleExerciseSave} className='wo-saveBtn'></SaveIcon> 
                                             </> ) : ( <>
                                                <button
                                                     onClick={() => markCompleted(workout.id, index)}
@@ -289,8 +292,8 @@ const fitness = () => {
                                                     {exercise.note ? <p className="wo-note">{exercise.note}</p> : null}
                                                     {exercise.completion ? <p className="wo-completion-note"><strong>Completed:</strong> {new Date(exercise.timeCompleted).toLocaleDateString()} - {new Date(exercise.timeCompleted).toLocaleTimeString()}</p> : null}
                                                 </div>
-                                                <button onClick={() => handleEditExercise(workout.id, exercise.id, exercise.description, exercise.note)} className='wo-editBtn'>Edit</button>       
-                                                <button onClick={() => handleDeleteExercise(workout.id, exercise.id)} className='wo-deleteBtn'>Delete</button>
+                                                <EditIcon onClick={() => handleEditExercise(workout.id, exercise.id, exercise.description, exercise.note)} className='wo-editBtn'></EditIcon>       
+                                                <DeleteIcon onClick={() => handleDeleteExercise(workout.id, exercise.id)} className='wo-deleteBtn'></DeleteIcon>
                                             </> 
                                         )}
                                     </div>
