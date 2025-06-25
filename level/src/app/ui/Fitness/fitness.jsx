@@ -6,6 +6,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import SaveIcon from '@mui/icons-material/Save';
 import Tooltip from '@mui/material/Tooltip';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 //import myList from '../../data';
 
 const LOCAL_STORAGE_KEY = 'userRegimen';
@@ -119,7 +120,8 @@ const fitness = () => {
     };
 
     const handleDeleteWorkout = (workoutId) => {
-        setRegimen(prev => prev.filter(workout => workout.id !== workoutId))
+        setRegimen(prev => prev.filter(workout => workout.id !== workoutId));
+        setSelectedWorkout(null);
     };
 
     const handleDeleteExercise = (workoutId, exerciseId) => {
@@ -187,38 +189,53 @@ const fitness = () => {
 
     return (
         <div className="wo">
-            <div className="wo-form">
-                <input
-                className="wo-form-input"
-                type="text"
-                placeholder="New workout name"
-                value={newWorkoutName}
-                onChange={(e) => setNewWorkoutName(e.target.value)}
-                />
-                <button onClick={handleAddWorkout} className="wo-form-btn">Add Workout</button>
-            </div>
+            {!selectedWorkout && (
+                <motion.div 
+                    className="wo-form"
+                    key="addWorkout"
+                    layout
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -20 }}
+                >
+                    <input
+                        className="wo-form-input"
+                        type="text"
+                        placeholder="New workout name"
+                        value={newWorkoutName}
+                        onChange={(e) => setNewWorkoutName(e.target.value)}
+                    />
+                    <button onClick={handleAddWorkout} className="wo-form-btn">Add Workout</button>
+                </motion.div>
+            )}
+            
 
             {selectedWorkout && (
-                <div className="wo-form">
+                <motion.div 
+                    className="wo-form"
+                    key="addWorkout"
+                    layout
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -20 }}
+                >
                     <input
-                    className="wo-form-input"
-                    type="text"
-                    placeholder="Exercise title"
-                    value={newExercise.description}
-                    onChange={(e) => setNewExercise({ ...newExercise, description: e.target.value })}
+                        className="wo-form-input"
+                        type="text"
+                        placeholder="Exercise title"
+                        value={newExercise.description}
+                        onChange={(e) => setNewExercise({ ...newExercise, description: e.target.value })}
                     />
                     <input
-                    className="wo-form-input"
-                    type="text"
-                    placeholder="Exercise description (optional)"
-                    value={newExercise.note}
-                    onChange={(e) => setNewExercise({ ...newExercise, note: e.target.value })}
+                        className="wo-form-input"
+                        type="text"
+                        placeholder="Exercise description (optional)"
+                        value={newExercise.note}
+                        onChange={(e) => setNewExercise({ ...newExercise, note: e.target.value })}
                     />
                     <button onClick={handleAddExercise} className="wo-form-btn">Add Exercise</button>
-                    <button className="wo-back" onClick={handleBack}>
-                        &times;
-                    </button>
-                </div>
+                    <ArrowBackIcon className="wo-back" onClick={handleBack}></ArrowBackIcon>
+                </motion.div>
                 
             )}
             
@@ -249,15 +266,25 @@ const fitness = () => {
                             <button onClick={() => handleSelect(workout.id)} className="wo-option">
                                 <p className="wo-title">{workout.name} {workout.details.some(detail => detail.completion) && <span className="checkmark">✓</span>} </p> &rarr;
                             </button>
-                            <Tooltip title="Edit">
-                                <EditIcon onClick={() => handleWorkoutEdit(workout.id, workout.name)} className='wo-editBtn'></EditIcon>
-                            </Tooltip>
-                            <Tooltip title="Delete">
-                                <DeleteIcon onClick={() => handleDeleteWorkout(workout.id)} className='wo-deleteBtn'></DeleteIcon>
-                            </Tooltip>
                         </> )
                     }
                     <AnimatePresence>
+                        {selectedWorkout === workout.id && (
+                            <motion.div
+                                key="settings"
+                                initial={{ height: 0, opacity: 0 }}
+                                animate={{ height: 'auto', opacity: 1 }}
+                                exit={{ height: 0, opacity: 0 }}
+                                transition={{ duration: 0.3 }}
+                            >
+                                <Tooltip title="Edit">
+                                    <EditIcon onClick={() => handleWorkoutEdit(workout.id, workout.name)} className='wo-editBtn'></EditIcon>
+                                </Tooltip>
+                                <Tooltip title="Delete">
+                                    <DeleteIcon onClick={() => handleDeleteWorkout(workout.id)} className='wo-deleteBtn'></DeleteIcon>
+                                </Tooltip>
+                            </motion.div>
+                        )}
                         {selectedWorkout === workout.id && (
                             <motion.div
                                 key="details"
