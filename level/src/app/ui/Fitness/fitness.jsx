@@ -7,9 +7,17 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import SaveIcon from '@mui/icons-material/Save';
 import Tooltip from '@mui/material/Tooltip';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import { useCalendarLog } from '../../hooks/useCalendarLog';
+import { useDailyReset } from '../../hooks/useDailyReset';
+import CalendarView from '../Calendar/calendar';
+
 //import myList from '../../data';
 
 const LOCAL_STORAGE_KEY = 'userRegimen';
+
+
+
+
 
 
 const fitness = () => {
@@ -25,6 +33,38 @@ const fitness = () => {
         desc: '',
         note: ''
     });
+
+    const [calendarLog, setCalendarLog] = useState({});
+
+
+    useDailyReset((today) => {
+    // Filter completed exercises from the current regimen
+    const completedExercises = regimen.map(workout => ({
+        ...workout, // Spread workout data
+        details: workout.details.filter(detail => detail.completion) // Keep only completed exercises
+    })).filter(workout => workout.details.length > 0); // Keep only workouts that have at least one completed exercise
+
+    // If any exercises were completed, save them to calendar log
+    if (completedExercises.length > 0) {
+        setCalendarLog(prev => ({
+        ...prev, // Spread previous log
+        [today]: completedExercises // Set today's log entry
+        }));
+    }
+
+    // Reset the completion state of all exercises
+    const resetRegimen = regimen.map(workout => ({
+        ...workout, // Keep workout structure
+        details: workout.details.map(detail => ({
+        ...detail, // Keep exercise structure
+        completion: false, // Reset completion
+        timeCompleted: null // Clear time completed
+        }))
+    }));
+
+    setRegimen(resetRegimen); // Save the reset regimen to state
+    });
+
     
     // Load from data.js
     // useEffect(() => {
@@ -343,6 +383,7 @@ const fitness = () => {
                     </AnimatePresence>
                 </motion.div>
             ))}
+            <CalendarView calendarLog={calendarLog} onSelectDate={(date) => console.log(date)} />
         </div>
     )
 }
