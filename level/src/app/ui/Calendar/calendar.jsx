@@ -1,21 +1,19 @@
-import './calendar.scss';
-import {React, useState, useEffect} from 'react';
-
-const CalendarView = ({ calendarLog, onSelectDate }) => {
-  const dates = Object.keys(calendarLog).sort((a, b) => new Date(b) - new Date(a));
-
+export default function Calendar({ calendarLog }) {
   return (
     <div className="calendar">
-      <h3>Workout History</h3>
-      <ul className="calendar-list">
-        {dates.map((date) => (
-          <li key={date} onClick={() => onSelectDate(date)} className="calendar-item">
-            {date} ✅
-          </li>
-        ))}
-      </ul>
+      <h2>Workout History</h2>
+      {calendarLog.map((entry, idx) => (
+        <div key={idx} className="calendar-entry">
+          <strong>{entry.date}</strong>
+          <ul>
+            {entry.completedWorkouts.map(workout => (
+              <li key={workout.id}>
+                {workout.name}: {workout.completedExercises.join(', ')}
+              </li>
+            ))}
+          </ul>
+        </div>
+      ))}
     </div>
   );
-};
-
-export default CalendarView;
+}

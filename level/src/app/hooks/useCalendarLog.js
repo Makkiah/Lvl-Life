@@ -1,28 +1,21 @@
-import { useState, useEffect } from 'react';
+import { useEffect } from 'react';
 
-const LOCAL_CALENDAR_KEY = 'calendarLog';
-
-export const useCalendarLog = () => {
-  const [calendarLog, setCalendarLog] = useState({});
+export function useCalendarLog(regimen, logCompleted) {
+  // React hook that scans the regimen and logs any completed exercises
 
   useEffect(() => {
-    const stored = localStorage.getItem(LOCAL_CALENDAR_KEY);
-    if (stored) {
-      setCalendarLog(JSON.parse(stored));
+    const completedToday = regimen
+      .filter(workout => workout.details.some(detail => detail.completion))
+      .map(workout => ({
+        id: workout.id,
+        name: workout.name,
+        completedExercises: workout.details
+          .filter(detail => detail.completion)
+          .map(detail => detail.description)
+      }));
+
+    if (completedToday.length > 0) {
+      logCompleted(completedToday);
     }
-  }, []);
-
-  const updateLogForDate = (date, workoutsForDate) => {
-    const updated = {
-      ...calendarLog,
-      [date]: {
-        ...(calendarLog[date] || {}),
-        workouts: workoutsForDate
-      }
-    };
-    localStorage.setItem(LOCAL_CALENDAR_KEY, JSON.stringify(updated));
-    setCalendarLog(updated);
-  };
-
-  return { calendarLog, updateLogForDate };
-};
+  }, [regimen, logCompleted]);
+}

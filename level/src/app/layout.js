@@ -3,7 +3,7 @@ import Nav from './ui/Nav/nav';
 import Footer from './ui/Footer/footer';
 
 export const metadata = {
-  title: "Work-It",
+  title: "LVL-Life",
   description: "Generated with Next JS - App developed by Makkiah",
 };
 
